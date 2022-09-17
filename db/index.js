@@ -3,7 +3,7 @@ const env = process.env.NODE_ENV || "development";
 const config = require("../config/config")[env];
 
 const User = require("./models/user");
-const Record = require("./models/record");
+const BossRaidHistory = require("./models/bossRaidHistory");
 
 const db = {};
 const sequelize = new Sequelize(
@@ -15,12 +15,12 @@ const sequelize = new Sequelize(
 
 db.sequelize = sequelize;
 db.User = User;
-db.Record = Record;
+db.BossRaidHistory = BossRaidHistory;
 
 User.init(sequelize);
-Record.init(sequelize);
+BossRaidHistory.init(sequelize);
 
 User.associate(db);
-Record.associate(db);
+BossRaidHistory.associate(db);
 
 module.exports = db;
