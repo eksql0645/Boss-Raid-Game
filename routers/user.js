@@ -17,4 +17,14 @@ userRouter.post("/", async (req, res, next) => {
   }
 });
 
+// 유저의 보스레이드 기록 조회
+userRouter.get("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const history = await userService.getHistory(userId);
+    res.status(200).json(history);
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = userRouter;

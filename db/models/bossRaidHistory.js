@@ -1,7 +1,7 @@
 const { nanoid } = require("nanoid");
 const Sequelize = require("sequelize");
 
-module.exports = class Record extends Sequelize.Model {
+module.exports = class BossRaidHistory extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
@@ -10,10 +10,6 @@ module.exports = class Record extends Sequelize.Model {
           allowNull: false,
           primaryKey: true,
           defaultValue: nanoid(8),
-        },
-        level: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
         },
         score: {
           type: Sequelize.INTEGER,
@@ -32,8 +28,8 @@ module.exports = class Record extends Sequelize.Model {
         sequelize,
         timestamps: false,
         underscored: false,
-        modelName: "Record",
-        tableName: "records",
+        modelName: "BossRaidHistory",
+        tableName: "boss_raid_histories",
         paranoid: true,
         charset: "utf8",
         collate: "utf8_general_ci",
@@ -41,7 +37,7 @@ module.exports = class Record extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.Record.belongsTo(db.User, {
+    db.BossRaidHistory.belongsTo(db.User, {
       foreignKey: "userId",
       targetKey: "id",
     });

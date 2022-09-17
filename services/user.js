@@ -7,9 +7,9 @@ const addUser = async (userInfo) => {
   const { email, password } = userInfo;
 
   // 해당 email로 가입한 user가 있는지 확인
-  let user = await userModel.findByEmail(email);
+  let user = await userModel.findUserByEmail(email);
   if (user) {
-    throw new Error(errorCodes.AlreadySignUpEmail);
+    throw new Error(errorCodes.alreadySignUpEmail);
   }
 
   // 비밀번호 해쉬화
@@ -20,4 +20,13 @@ const addUser = async (userInfo) => {
   return user;
 };
 
-module.exports = { addUser };
+// 유저의 보스레이드 기록 조회
+const getHistory = async (userId) => {
+  const history = await userModel.findHistory(userId);
+  if (!history) {
+    throw new Error(errorCodes.canNotFindHistory);
+  }
+  return history;
+};
+
+module.exports = { addUser, getHistory };
