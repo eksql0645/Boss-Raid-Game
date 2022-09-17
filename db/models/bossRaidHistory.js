@@ -1,4 +1,3 @@
-const { nanoid } = require("nanoid");
 const Sequelize = require("sequelize");
 
 module.exports = class BossRaidHistory extends Sequelize.Model {
@@ -9,7 +8,6 @@ module.exports = class BossRaidHistory extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: false,
           primaryKey: true,
-          defaultValue: nanoid(8),
         },
         score: {
           type: Sequelize.INTEGER,
