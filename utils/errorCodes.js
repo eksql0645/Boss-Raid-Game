@@ -3,6 +3,8 @@ module.exports = {
   pageNotFound: "페이지를 찾을 수 없습니다.",
   notUpdate: "수정된 내용이 없습니다.",
   notDelete: "삭제되지 않았습니다.",
+  // USER
+  AlreadySignUpEmail: "이미 가입된 이메일입니다.",
   // validator
   required: "필수 값입니다.",
   tooLongString: "요청 데이터가 제한글자수를 넘었습니다.",

@@ -8,6 +8,7 @@ module.exports = class Record extends Sequelize.Model {
         raidRecordId: {
           type: Sequelize.STRING,
           allowNull: false,
+          primaryKey: true,
           defaultValue: nanoid(8),
         },
         level: {
