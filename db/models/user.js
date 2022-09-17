@@ -8,6 +8,7 @@ module.exports = class User extends Sequelize.Model {
         id: {
           type: Sequelize.STRING,
           allowNull: false,
+          primaryKey: true,
           defaultValue: nanoid(8),
         },
         nick: {
@@ -20,7 +21,7 @@ module.exports = class User extends Sequelize.Model {
           unique: true,
         },
         password: {
-          type: Sequelize.STRING(45),
+          type: Sequelize.STRING(70),
           allowNull: false,
         },
         totalScore: {
