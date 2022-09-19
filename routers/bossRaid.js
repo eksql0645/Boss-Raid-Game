@@ -1,0 +1,16 @@
+const { Router } = require("express");
+const bossRaidRouter = Router();
+const { bossRaidService } = require("../services");
+
+// 랭킹 조회
+bossRaidRouter.get("/ranking/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const rankingList = await bossRaidService.getRankingList(userId);
+    res.status(200).json(rankingList);
+  } catch (err) {
+    next(err);
+  }
+});
+
+module.exports = bossRaidRouter;

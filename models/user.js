@@ -6,8 +6,13 @@ const createUser = async (userInfo) => {
 };
 
 const findUserByEmail = async (email) => {
-  const userId = await User.findOne({ where: { email } });
-  return userId;
+  const user = await User.findOne({ where: { email } });
+  return user;
+};
+
+const findUserById = async (userId) => {
+  const user = await User.findOne({ where: { id: userId } });
+  return user;
 };
 
 const findHistory = async (userId) => {
@@ -24,4 +29,4 @@ const findHistory = async (userId) => {
   return history;
 };
 
-module.exports = { createUser, findUserByEmail, findHistory };
+module.exports = { createUser, findUserByEmail, findHistory, findUserById };
