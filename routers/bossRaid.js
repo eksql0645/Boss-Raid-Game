@@ -6,7 +6,10 @@ const { bossRaidService } = require("../services");
 bossRaidRouter.get("/ranking/:userId", async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const rankingList = await bossRaidService.getRankingList(userId);
+    const redis = req.app.get("redis");
+
+    const rankingList = await bossRaidService.getRankingList(userId, redis);
+
     res.status(200).json(rankingList);
   } catch (err) {
     next(err);

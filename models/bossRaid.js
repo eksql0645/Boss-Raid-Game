@@ -1,8 +1,8 @@
 const { Sequelize } = require("sequelize");
 const { User } = require("../db");
 
-// 랭킹 조회
-const findRankingList = async (userId) => {
+// DB에서 랭킹 조회
+const findRankingListInDB = async (userId) => {
   const ranking = await User.findAll({
     order: [["totalScore", "DESC"]],
     attributes: [
@@ -20,8 +20,15 @@ const findRankingList = async (userId) => {
   const userRank = ranking.filter((ele) => {
     return ele.userId === userId;
   });
+
   const rankingList = { ranking, userRank };
   return rankingList;
 };
 
-module.exports = { findRankingList };
+// Redis에서 랭킹 조회
+const findRankingListInRedis = async (redis) => {
+  const rankingList = await redis.json.get("rankingLists");
+  return rankingList;
+};
+
+module.exports = { findRankingListInDB, findRankingListInRedis };
