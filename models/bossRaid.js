@@ -1,9 +1,9 @@
 const { Sequelize } = require("sequelize");
 const { User } = require("../db");
 
-// DB에서 랭킹 조회
-const findRankingListInDB = async (userId) => {
-  const ranking = await User.findAll({
+// 전체 랭킹 조회
+const findRankingList = async () => {
+  const rankingList = await User.findAll({
     order: [["totalScore", "DESC"]],
     attributes: [
       [
@@ -15,20 +15,19 @@ const findRankingListInDB = async (userId) => {
     ],
     raw: true,
   });
+  return rankingList;
+};
 
-  // 유저의 랭킹 조회
-  const userRank = ranking.filter((ele) => {
+// 유저의 랭킹 조회
+const findUserRanking = async (userId) => {
+  // 전체랭킹조회에서 userId에 해당하는 랭킹 정보 가져오기
+  const rankingList = await findRankingList();
+
+  const userRanking = rankingList.filter((ele) => {
     return ele.userId === userId;
   });
 
-  const rankingList = { ranking, userRank };
-  return rankingList;
+  return userRanking;
 };
 
-// Redis에서 랭킹 조회
-const findRankingListInRedis = async (redis) => {
-  const rankingList = await redis.json.get("rankingLists");
-  return rankingList;
-};
-
-module.exports = { findRankingListInDB, findRankingListInRedis };
+module.exports = { findRankingList, findUserRanking };
