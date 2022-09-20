@@ -44,9 +44,36 @@ const findBossRaidHistory = async (raidRecordId) => {
   return bossRaidHistory;
 };
 
+// 유저의 totalScore 업데이트
+const incrementTotalScore = async (incrementInfo) => {
+  const { userId, score } = incrementInfo;
+  const result = await User.increment(
+    { totalScore: score },
+    { where: { id: userId } }
+  );
+  return result;
+};
+
+const getRedis = async (redis, key) => {
+  return await redis.json.get(key);
+};
+
+const setRedis = async (redis, key, value) => {
+  await redis.json.set(key, "$", value);
+
+  // rankingList 캐싱 기간 설정
+  if (key === "rankingList") {
+    await redis.expire("rankingList", 43200);
+  }
+  return;
+};
+
 module.exports = {
   findRankingList,
   findUserRanking,
   createBossRaidHistory,
   findBossRaidHistory,
+  incrementTotalScore,
+  getRedis,
+  setRedis,
 };
