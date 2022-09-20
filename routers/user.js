@@ -1,10 +1,14 @@
 const { Router } = require("express");
 const { nanoid } = require("nanoid");
+const {
+  userAddValidator,
+  userGetValidator,
+} = require("../middlewares/validator/userValidator");
 const userRouter = Router();
 const { userService } = require("../services");
 
 // 유저 생성
-userRouter.post("/", async (req, res, next) => {
+userRouter.post("/", userAddValidator(), async (req, res, next) => {
   try {
     const { nick, email, password, totalScore } = req.body;
 
@@ -19,7 +23,7 @@ userRouter.post("/", async (req, res, next) => {
 });
 
 // 유저의 보스레이드 기록 조회
-userRouter.get("/:userId", async (req, res, next) => {
+userRouter.get("/:userId", userGetValidator(), async (req, res, next) => {
   try {
     const { userId } = req.params;
     const history = await userService.getHistory(userId);
