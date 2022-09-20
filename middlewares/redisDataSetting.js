@@ -25,13 +25,8 @@ module.exports = async (req, res, next) => {
       await redis.json.set("bossRaidStatus", "$", bossRaidStatus);
     }
 
-    if (!(await redis.json.get("bossRaidEnterData"))) {
-      await redis.json.set("bossRaidEnterData", "$", {
-        raidRecordId: null,
-        enterTime: null,
-        score: null,
-        userId: null,
-      });
+    if (!(await redis.json.get("enteredBossRaid"))) {
+      await redis.json.set("enteredBossRaid", "$", {});
     }
     next();
   } catch (err) {
