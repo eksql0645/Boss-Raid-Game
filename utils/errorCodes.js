@@ -5,6 +5,7 @@ module.exports = {
   notDelete: "삭제되지 않았습니다.",
   // USER
   canNotFindRecord: "보스레이드 기록이 존재하지 않습니다.",
+  canNotFindUser: "존재하지 않는 회원입니다.",
   alreadySignUpEmail: "이미 가입된 이메일입니다.",
   // validator
   required: "필수 값입니다.",

@@ -1,3 +1,4 @@
 const userService = require("./user");
+const bossRaidService = require("./bossRaid");
 
-module.exports = { userService };
+module.exports = { userService, bossRaidService };

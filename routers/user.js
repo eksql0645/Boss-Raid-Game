@@ -1,13 +1,14 @@
 const { Router } = require("express");
+const { nanoid } = require("nanoid");
 const userRouter = Router();
 const { userService } = require("../services");
 
 // 유저 생성
 userRouter.post("/", async (req, res, next) => {
   try {
-    const { nick, email, password } = req.body;
+    const { nick, email, password, totalScore } = req.body;
 
-    const userInfo = { nick, email, password };
+    const userInfo = { nick, email, password, id: nanoid(), totalScore };
 
     const user = await userService.addUser(userInfo);
 
@@ -27,4 +28,5 @@ userRouter.get("/:userId", async (req, res, next) => {
     next(err);
   }
 });
+
 module.exports = userRouter;

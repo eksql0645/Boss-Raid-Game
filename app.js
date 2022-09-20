@@ -7,10 +7,12 @@ const routes = require("./routers");
 const errorHandler = require("./middlewares/errorHandler");
 const errorCodes = require("./utils/errorCodes");
 const { swaggerUi, specs } = require("./swagger");
+const redisConenct = require("./middlewares/redis");
 
 dotenv.config();
 
 const app = express();
+
 app.set("port", process.env.PORT);
 
 sequelize
@@ -22,6 +24,7 @@ sequelize
     console.log("Failed to sync database: " + err.message);
   });
 
+app.use(redisConenct);
 if (process.env.NODE_ENV !== "test") {
   app.use(morgan("dev"));
 }

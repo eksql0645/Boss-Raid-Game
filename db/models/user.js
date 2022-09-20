@@ -1,4 +1,3 @@
-const { nanoid } = require("nanoid");
 const Sequelize = require("sequelize");
 
 module.exports = class User extends Sequelize.Model {
@@ -9,7 +8,6 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.STRING,
           allowNull: false,
           primaryKey: true,
-          defaultValue: nanoid(8),
         },
         nick: {
           type: Sequelize.STRING(15),
@@ -25,8 +23,9 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
         },
         totalScore: {
-          type: Sequelize.STRING(10),
-          allowNull: true,
+          type: Sequelize.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
         },
       },
       {
