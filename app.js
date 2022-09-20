@@ -1,19 +1,16 @@
 const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
 const morgan = require("morgan");
 const { sequelize } = require("./db");
-const dotenv = require("dotenv");
 const routes = require("./routers");
 const errorHandler = require("./middlewares/errorHandler");
 const errorCodes = require("./utils/errorCodes");
 const { swaggerUi, specs } = require("./swagger");
 const redisConenct = require("./middlewares/redis");
 const redisDataSetting = require("./middlewares/redisDataSetting");
-dotenv.config();
 
 const app = express();
-
-app.set("port", process.env.PORT);
 
 sequelize
   .sync({ force: false })
