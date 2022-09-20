@@ -28,7 +28,22 @@ const getUserRanking = async (userId) => {
   }
 
   const userRanking = await bossRaidModel.findUserRanking(userId);
+  if (!userRanking) {
+    throw new Error(errorCodes.serverError);
+  }
+
   return userRanking;
 };
 
-module.exports = { getRankingList, getUserRanking };
+// 보스레이드 상태 조회
+const getBossRaidStatus = async (redis) => {
+  const bossRaidStatus = await redis.json.get("bossRaidStatus");
+
+  if (!bossRaidStatus) {
+    throw new Error(errorCodes.serverError);
+  }
+
+  return bossRaidStatus;
+};
+
+module.exports = { getRankingList, getUserRanking, getBossRaidStatus };

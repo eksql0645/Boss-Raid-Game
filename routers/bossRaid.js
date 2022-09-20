@@ -26,4 +26,15 @@ bossRaidRouter.get("/ranking/:userId", async (req, res, next) => {
   }
 });
 
+// 보스레이드 상태 조회
+bossRaidRouter.get("/", async (req, res, next) => {
+  try {
+    const redis = req.app.get("redis");
+    const bossRaidStatus = await bossRaidService.getBossRaidStatus(redis);
+    res.status(200).json(bossRaidStatus);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = bossRaidRouter;

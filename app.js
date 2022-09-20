@@ -8,7 +8,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const errorCodes = require("./utils/errorCodes");
 const { swaggerUi, specs } = require("./swagger");
 const redisConenct = require("./middlewares/redis");
-
+const redisDataSetting = require("./middlewares/redisDataSetting");
 dotenv.config();
 
 const app = express();
@@ -25,6 +25,7 @@ sequelize
   });
 
 app.use(redisConenct);
+app.use(redisDataSetting);
 if (process.env.NODE_ENV !== "test") {
   app.use(morgan("dev"));
 }
