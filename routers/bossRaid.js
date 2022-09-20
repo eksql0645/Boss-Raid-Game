@@ -59,4 +59,18 @@ bossRaidRouter.post("/", async (req, res, next) => {
   }
 });
 
+// 보스레이드 종료
+bossRaidRouter.patch("/", async (req, res, next) => {
+  try {
+    const { userId, raidRecordId } = req.body;
+    const historyInfo = { userId, raidRecordId };
+    const redis = req.app.get("redis");
+
+    await bossRaidService.addBossRaidHistory(redis, historyInfo);
+    res.status(200).end();
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = bossRaidRouter;

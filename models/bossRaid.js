@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const { User } = require("../db");
+const { User, BossRaidHistory } = require("../db");
 
 // 전체 랭킹 조회
 const findRankingList = async () => {
@@ -32,8 +32,21 @@ const findUserRanking = async (userId) => {
 
 // 보스레이드 기록 생성
 const createBossRaidHistory = async (historyInfo) => {
-  const bossRaidHistory = await User.create(historyInfo);
+  const bossRaidHistory = await BossRaidHistory.create(historyInfo);
   return bossRaidHistory;
 };
 
-module.exports = { findRankingList, findUserRanking, createBossRaidHistory };
+// 보스레이드 기록 조회
+const findBossRaidHistory = async (raidRecordId) => {
+  const bossRaidHistory = await BossRaidHistory.findOne({
+    where: { raidRecordId },
+  });
+  return bossRaidHistory;
+};
+
+module.exports = {
+  findRankingList,
+  findUserRanking,
+  createBossRaidHistory,
+  findBossRaidHistory,
+};

@@ -2,6 +2,7 @@ const { bossRaidModel, userModel } = require("../models");
 const errorCodes = require("../utils/errorCodes");
 const { nanoid } = require("nanoid");
 const moment = require("moment");
+const resetData = require("../utils/resetData");
 
 // 전체 랭킹 조회
 const getRankingList = async (redis) => {
@@ -68,9 +69,9 @@ const getBossRaidEnterStatus = async (redis, enterInfo) => {
   // 보스레이드 데이터 가져오기
   const bossRaidData = JSON.parse(await redis.json.get("bossRaid"))
     .bossRaids[0];
-  const enterTime = moment().format();
+  const enterTime = moment();
   const bossRaidLevel = bossRaidData.levels[level].level;
-  const score = bossRaidLevel.score;
+  const score = bossRaidData.levels[level].score;
 
   // 레벨 확인
   if (!(level === bossRaidLevel)) {
@@ -78,14 +79,15 @@ const getBossRaidEnterStatus = async (redis, enterInfo) => {
   }
 
   // lock
-  await redis.watch("bossRaidEnterData", "bossRaidStatus");
+  await redis.watch("enteredBossRaid", "bossRaidStatus");
 
   // 게임 종료시 기록 생성에 사용할 임시 enterData 생성
   await redis
     .multi()
-    .json.set("bossRaidEnterData", "$", {
+    .json.set("enteredBossRaid", "$", {
       raidRecordId: nanoid(),
       enterTime,
+      endTime: null,
       score,
       userId,
     })
@@ -95,9 +97,70 @@ const getBossRaidEnterStatus = async (redis, enterInfo) => {
     })
     .exec();
 
-  const bossRaidEnterData = await redis.json.get("bossRaidEnterData");
+  const enteredBossRaid = await redis.json.get("enteredBossRaid");
 
-  return { isEntered: true, raidRecordId: bossRaidEnterData.raidRecordId };
+  return { isEntered: true, raidRecordId: enteredBossRaid.raidRecordId };
+};
+
+// 보스레이드 종료
+const addBossRaidHistory = async (redis, historyInfo) => {
+  const { userId, raidRecordId } = historyInfo;
+
+  // 종료 확인
+  const closedRaid = await bossRaidModel.findBossRaidHistory(raidRecordId);
+  if (closedRaid) {
+    resetData(redis);
+    throw new Error(errorCodes.alreadyClosedBossRaid);
+  }
+
+  // 요청정보와 입장한 보스레이드의 정보 일치 확인
+  const enteredBossRaid = await redis.json.get("enteredBossRaid");
+  if (!enteredBossRaid) {
+    throw new Error(errorCodes.canNotFindEnterData);
+  }
+  if (userId !== enteredBossRaid.userId) {
+    throw new Error(errorCodes.doNotMatchUser);
+  }
+  if (raidRecordId !== enteredBossRaid.raidRecordId) {
+    throw new Error(errorCodes.doNotMatchBossRaid);
+  }
+
+  // 시간 측정
+  const limitTime = JSON.parse(await redis.json.get("bossRaid")).bossRaids[0]
+    .bossRaidLimitSeconds;
+  const enterTime = enteredBossRaid.enterTime;
+  const endTime = moment();
+  const gap = endTime.diff(enterTime, "seconds");
+
+  // 시간 초과 시 예외처리
+  if (gap > limitTime) {
+    resetData(redis);
+  }
+
+  historyInfo = enteredBossRaid;
+  historyInfo.endTime = endTime.format();
+
+  const bossRaidHistory = await bossRaidModel.createBossRaidHistory(
+    historyInfo
+  );
+
+  if (!bossRaidHistory) {
+    throw new Error(errorCodes.failedCreateHistory);
+  }
+
+  // 정상 종료 시 score 유저 totalScore에 반영
+  const incrementInfo = {
+    userId,
+    score: bossRaidHistory.score,
+  };
+  const result = await userModel.incrementUser(incrementInfo);
+  if (!result[0][1]) {
+    throw new Error(errorCodes.doNotUpdateScore);
+  }
+
+  // 보스레이드 상태와 입장한 보스레이드 데이터를 초기화한다.
+  resetData(redis);
+  return;
 };
 
 module.exports = {
@@ -105,4 +168,5 @@ module.exports = {
   getUserRanking,
   getBossRaidStatus,
   getBossRaidEnterStatus,
+  addBossRaidHistory,
 };
