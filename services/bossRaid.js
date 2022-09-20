@@ -134,6 +134,7 @@ const addBossRaidHistory = async (redis, historyInfo) => {
   // 시간 초과 시 예외처리
   if (gap > limitTime) {
     resetData(redis);
+    throw new Error(errorCodes.timeOver);
   }
 
   historyInfo = enteredBossRaid;
