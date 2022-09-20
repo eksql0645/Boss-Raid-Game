@@ -9,6 +9,7 @@ module.exports = {
   alreadySignUpEmail: "이미 가입된 이메일입니다.",
   // bossRaid
   canNotFindStatus: "보스레이드 상태를 조회할 수 없습니다.",
+  canNotFindLevel: "존재하지 않는 레벨입니다.",
   // validator
   required: "필수 값입니다.",
   tooLongString: "요청 데이터가 제한글자수를 넘었습니다.",

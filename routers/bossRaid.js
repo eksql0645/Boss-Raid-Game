@@ -37,4 +37,26 @@ bossRaidRouter.get("/", async (req, res, next) => {
   }
 });
 
+// 보스레이드 게임 시작
+bossRaidRouter.post("/", async (req, res, next) => {
+  try {
+    const { userId, level } = req.body;
+    const redis = req.app.get("redis");
+
+    const enterInfo = {
+      userId,
+      level: parseInt(level),
+    };
+
+    const enterStatus = await bossRaidService.getBossRaidEnterStatus(
+      redis,
+      enterInfo
+    );
+
+    res.status(201).json(enterStatus);
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = bossRaidRouter;
