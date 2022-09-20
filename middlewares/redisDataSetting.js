@@ -20,9 +20,18 @@ module.exports = async (req, res, next) => {
     if (!(await redis.json.get("bossRaidStatus"))) {
       const bossRaidStatus = {
         canEnter: true,
-        enteredUserId: "",
+        enteredUserId: null,
       };
       await redis.json.set("bossRaidStatus", "$", bossRaidStatus);
+    }
+
+    if (!(await redis.json.get("bossRaidEnterData"))) {
+      await redis.json.set("bossRaidEnterData", "$", {
+        raidRecordId: null,
+        enterTime: null,
+        score: null,
+        userId: null,
+      });
     }
     next();
   } catch (err) {

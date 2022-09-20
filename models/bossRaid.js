@@ -30,4 +30,10 @@ const findUserRanking = async (userId) => {
   return userRanking;
 };
 
-module.exports = { findRankingList, findUserRanking };
+// 보스레이드 기록 생성
+const createBossRaidHistory = async (historyInfo) => {
+  const bossRaidHistory = await User.create(historyInfo);
+  return bossRaidHistory;
+};
+
+module.exports = { findRankingList, findUserRanking, createBossRaidHistory };
