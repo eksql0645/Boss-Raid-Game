@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
 
   // 연결되면 req.app에 redisClient 담기
   redisClient.on("connect", () => {
-    console.info("Redis connected!");
+    console.log("Redis connected!");
     req.app.set("redis", redisClient);
     next();
   });
