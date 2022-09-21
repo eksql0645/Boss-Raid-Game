@@ -10,7 +10,6 @@ const {
   findUserByEmail,
   findUserById,
   findHistory,
-  incrementUser,
 } = require("../models/user");
 
 describe("createUser", () => {
@@ -50,15 +49,5 @@ describe("findHistory", () => {
   test("유저의 보스레이드 기록을 반환한다.", async () => {
     User.findOne.mockReturnValue(history);
     expect(await findHistory(userId)).toEqual(history);
-  });
-});
-
-describe("incrementUser", () => {
-  const incrementInfo = testData.incrementInfo;
-
-  const result = [[undefined, 1]];
-  test("유저의 보스레이드 기록을 반환한다.", async () => {
-    User.increment.mockReturnValue(result);
-    expect(await incrementUser(incrementInfo)).toEqual(result);
   });
 });

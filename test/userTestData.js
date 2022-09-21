@@ -1,10 +1,41 @@
 module.exports = {
   userId: "k5yHK7ckWyFMD0clH_re3",
+  userIdTooLong:
+    "userIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserIDuserID",
   email: "email1@email.test",
-  userInfo: {
+  nickTooLongInfo: {
+    nick: "qwfwqfewgewrgwegeqgeqfqwfqwfwehgewgsdf",
+    email: "emailemail",
+    password: "123!32QWE@",
+  },
+  nullInfo: {
+    nick: "nick",
+    email: "email1@email.test",
+  },
+  emailTooLongInfo: {
+    nick: "nick",
+    email: "emailemail",
+    password: "123!32QWE@",
+  },
+  wrongEmailInfo: {
+    nick: "nick",
+    email: "emailemail",
+    password: "123!32QWE@",
+  },
+  conflictUserInfo: {
     nick: "nick",
     email: "email1@email.test",
     password: "123!32QWE@",
+  },
+  userInfo: {
+    nick: "nick",
+    email: "TEST@email.test",
+    password: "123!32QWE@",
+  },
+  wrongPasswordInfo: {
+    nick: "nick",
+    email: "email1@email.test",
+    password: "1234",
   },
   user: {
     email: "email1@email.test",

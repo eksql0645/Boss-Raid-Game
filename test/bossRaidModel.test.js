@@ -10,6 +10,7 @@ let {
   findUserRanking,
   createBossRaidHistory,
   findBossRaidHistory,
+  incrementTotalScore,
 } = require("../models/bossRaid");
 
 describe("findRankingList", () => {
@@ -45,5 +46,16 @@ describe("findBossRaidHistory", () => {
     const bossRaidHistory = testData.bossRaidHistory;
     BossRaidHistory.findOne.mockReturnValue(bossRaidHistory);
     expect(await findBossRaidHistory(raidRecordId)).toEqual(bossRaidHistory);
+  });
+});
+
+describe("incrementTotalScore", () => {
+  const incrementInfo = testData.incrementInfo;
+
+  const result = [[undefined, 1]];
+  test("유저의 보스레이드 기록을 반환한다.", async () => {
+    User.increment.mockReturnValue(result);
+
+    expect(await incrementTotalScore(incrementInfo)).toEqual(result);
   });
 });
