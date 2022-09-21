@@ -17,8 +17,12 @@ module.exports = {
   doNotUpdateScore: "점수가 반영되지 않았습니다.",
   failedCreateHistory: "기록이 생성되지 않았습니다.",
   alreadyClosedBossRaid: "이미 종료된 보스레이드입니다.",
+  canInputLevel: "레벨은 0~2까지 입력 가능합니다.",
   // validator
   required: "필수 값입니다.",
+  wrongFormat: "형식을 맞춰주세요.",
+  wrongEmailFormat: "올바른 이메일 형식이 아닙니다.",
+  wrongPwdFormat: "8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.",
   tooLongString: "요청 데이터가 제한글자수를 넘었습니다.",
   onlyUseInt: "정수만 입력가능합니다.",
   dateFormat: "YYYYMMDD로 입력하세요.",

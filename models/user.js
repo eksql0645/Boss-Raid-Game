@@ -33,20 +33,9 @@ const findHistory = async (userId) => {
   return history;
 };
 
-// 유저의 totalScore 업데이트
-const incrementUser = async (incrementInfo) => {
-  const { userId, score } = incrementInfo;
-  const result = await User.increment(
-    { totalScore: score },
-    { where: { id: userId } }
-  );
-  return result;
-};
-
 module.exports = {
   createUser,
   findUserByEmail,
   findHistory,
   findUserById,
-  incrementUser,
 };
