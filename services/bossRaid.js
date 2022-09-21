@@ -3,6 +3,7 @@ const errorCodes = require("../utils/errorCodes");
 const { nanoid } = require("nanoid");
 const moment = require("moment");
 const resetData = require("../utils/resetData");
+const { setRedis, getRedis } = require("../models/bossRaid");
 
 // 전체 랭킹 조회
 const getRankingList = async (redis) => {
@@ -14,10 +15,7 @@ const getRankingList = async (redis) => {
   }
 
   // Redis에 rankingList 캐싱
-  await redis.json.set("rankingList", "$", rankingList);
-
-  // rankingList 캐싱 기간 설정
-  await redis.expire("rankingList", 43200);
+  await setRedis(redis, "rankingList", rankingList);
 
   return rankingList;
 };
@@ -40,8 +38,7 @@ const getUserRanking = async (userId) => {
 
 // 보스레이드 상태 조회
 const getBossRaidStatus = async (redis) => {
-  const bossRaidStatus = await redis.json.get("bossRaidStatus");
-
+  const bossRaidStatus = await getRedis(redis, "bossRaidStatus");
   if (!bossRaidStatus) {
     throw new Error(errorCodes.serverError);
   }
@@ -67,11 +64,12 @@ const getBossRaidEnterStatus = async (redis, enterInfo) => {
   }
 
   // 보스레이드 데이터 가져오기
-  const bossRaidData = JSON.parse(await redis.json.get("bossRaid"))
+  const bossRaidData = JSON.parse(await getRedis(redis, "bossRaid"))
     .bossRaids[0];
+  const bossRaidlevels = bossRaidData.levels[level];
+  const bossRaidLevel = bossRaidlevels.level;
+  const score = bossRaidlevels.score;
   const enterTime = moment();
-  const bossRaidLevel = bossRaidData.levels[level].level;
-  const score = bossRaidData.levels[level].score;
 
   // 레벨 확인
   if (!(level === bossRaidLevel)) {
@@ -97,7 +95,7 @@ const getBossRaidEnterStatus = async (redis, enterInfo) => {
     })
     .exec();
 
-  const enteredBossRaid = await redis.json.get("enteredBossRaid");
+  const enteredBossRaid = await getRedis(redis, "enteredBossRaid");
 
   return { isEntered: true, raidRecordId: enteredBossRaid.raidRecordId };
 };
@@ -114,7 +112,8 @@ const addBossRaidHistory = async (redis, historyInfo) => {
   }
 
   // 요청정보와 입장한 보스레이드의 정보 일치 확인
-  const enteredBossRaid = await redis.json.get("enteredBossRaid");
+  const enteredBossRaid = await getRedis(redis, "enteredBossRaid");
+
   if (!enteredBossRaid) {
     throw new Error(errorCodes.canNotFindEnterData);
   }
@@ -126,7 +125,7 @@ const addBossRaidHistory = async (redis, historyInfo) => {
   }
 
   // 시간 측정
-  const limitTime = JSON.parse(await redis.json.get("bossRaid")).bossRaids[0]
+  const limitTime = JSON.parse(await getRedis(redis, "bossRaid")).bossRaids[0]
     .bossRaidLimitSeconds;
   const enterTime = enteredBossRaid.enterTime;
   const endTime = moment();
@@ -135,6 +134,7 @@ const addBossRaidHistory = async (redis, historyInfo) => {
   // 시간 초과 시 예외처리
   if (gap > limitTime) {
     resetData(redis);
+    throw new Error(errorCodes.timeOver);
   }
 
   historyInfo = enteredBossRaid;
@@ -153,7 +153,7 @@ const addBossRaidHistory = async (redis, historyInfo) => {
     userId,
     score: bossRaidHistory.score,
   };
-  const result = await userModel.incrementUser(incrementInfo);
+  const result = await bossRaidModel.incrementTotalScore(incrementInfo);
   if (!result[0][1]) {
     throw new Error(errorCodes.doNotUpdateScore);
   }

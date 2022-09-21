@@ -1,7 +1,5 @@
 const swaggerUi = require("swagger-ui-express");
 const swaggereJsdoc = require("swagger-jsdoc");
-const env = process.env;
-const PORT = env.PORT;
 
 const options = {
   swaggerDefinition: {
@@ -13,11 +11,11 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`, // 요청 URL
+        url: `http://localhost:${process.env.PORT}`, // 요청 URL
       },
     ],
   },
-  apis: ["./routes/*.js"], //Swagger 파일 연동
+  apis: ["./routers/*.js"], //Swagger 파일 연동
 };
 const specs = swaggereJsdoc(options);
 
