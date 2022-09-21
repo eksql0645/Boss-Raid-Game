@@ -4,7 +4,7 @@
   "description": "보스레이드 게임 서비스입니다.",
   "main": "server.js",
   "scripts": {
-    "test": "jest ./test/userModel.test.js",
+    "test": "jest",
     "start": "nodemon server.js"
   },
   "repository": {
